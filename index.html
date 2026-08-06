@@ -9,22 +9,30 @@
   <style>
     html, body { margin: 0; overflow: hidden; }
     #start-button {
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  z-index: 999;
-  padding: 20px 40px;
-  font-size: 18px;
-  background: rgba(255, 255, 255, 0.75);
-  color: #333;
-  border: 1px solid rgba(255, 255, 255, 0.9);
-  border-radius: 16px;
-  cursor: pointer;
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
-  letter-spacing: 0.05em;
-}
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      z-index: 999;
+      padding: 20px 40px;
+      font-size: 18px;
+      background: rgba(255, 255, 255, 0.75);
+      color: #333;
+      border: 1px solid rgba(255, 255, 255, 0.9);
+      border-radius: 16px;
+      cursor: pointer;
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      letter-spacing: 0.05em;
+    }
+
+    /* 丸型動画のスタイル */
+    #circle-video {
+      position: fixed;
+      border-radius: 50%;
+      object-fit: cover;
+      display: none;
+    }
   </style>
 </head>
 <body>
@@ -39,7 +47,7 @@
 
     <a-assets>
       <video id="video"
-             src="assets/videos/dake_taling_00.mp4"
+             src="assets/videos/dake2_talking.mp4"
              preload="auto"
              playsinline
              webkit-playsinline></video>
@@ -47,14 +55,15 @@
 
     <a-camera position="0 0 0" look-controls="enabled:false"></a-camera>
 
-  <a-entity mindar-image-target="targetIndex:0"
-          id="card-target"
-          scale="2 2 2">
+   <a-entity mindar-image-target="targetIndex:0"
+          id="card-target">
   <a-video id="ar-video"
            src="#video"
-           width="1"
-           height="1.8"
-           position="0 0 0.001"></a-video>
+width="0.6"
+height="0.6"
+position="0 0 0.001"
+geometry="primitive:circle; radius:0.3"
+           material="src:#video; shader:flat"></a-video>
 </a-entity>
 
   </a-scene>
@@ -64,18 +73,15 @@
     const video = document.querySelector('#video');
     const btn = document.querySelector('#start-button');
 
-    // ボタンをタップしてからARスタート
     btn.addEventListener('click', () => {
       btn.style.display = 'none';
       video.load();
     });
 
-    // 名刺を検出したら再生
     target.addEventListener('targetFound', () => {
       video.play();
     });
 
-    // 名刺が外れたら停止・巻き戻し
     target.addEventListener('targetLost', () => {
       video.pause();
       video.currentTime = 0;
